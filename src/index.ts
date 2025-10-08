@@ -6,20 +6,19 @@ export interface Env {
 
 export default {
   async fetch(request, env): Promise<Response> {
-    const { pathname } = new URL(request.url);
 
-    if (pathname === "/api/beverages") {
-      // If you did not use `DB` as your binding name, change it here
+
+	try{
+		// If you did not use `DB` as your binding name, change it here
       const { results } = await env.database_name.prepare(
         "SELECT * FROM images WHERE id = ?",
       )
         .bind(1)
         .run();
-      return Response.json(results);
-    }
-
-    return new Response(
-      "Call /api/beverages to see everyone who works at Bs Beverages",
-    );
+      return Response.json(results);}
+	catch(e){
+		return Response.json(e);
+	}
+    
   },
 } satisfies ExportedHandler<Env>;
